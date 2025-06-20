@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:5000/api'; // Change to your backend URL if needed
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export async function getCategories() {
   const res = await fetch(`${API_BASE}/categories`);
