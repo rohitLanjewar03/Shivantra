@@ -1,4 +1,5 @@
 const MenuCategory = require('../models/MenuCategory');
+const MenuItem = require('../models/MenuItem');
 
 // Create a new category
 exports.createCategory = async (req, res) => {
@@ -43,9 +44,18 @@ exports.updateCategory = async (req, res) => {
 exports.deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
-    const category = await MenuCategory.findByIdAndDelete(id);
-    if (!category) return res.status(404).json({ error: 'Category not found' });
-    res.json({ message: 'Category deleted' });
+    const category = await MenuCategory.findById(id);
+    if (!category) {
+      return res.status(404).json({ error: 'Category not found' });
+    }
+
+    // Delete all menu items in this category
+    await MenuItem.deleteMany({ category: id });
+
+    // Delete the category
+    await MenuCategory.findByIdAndDelete(id);
+
+    res.json({ message: 'Category and all associated items deleted' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
