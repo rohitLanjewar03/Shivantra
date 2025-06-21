@@ -38,13 +38,11 @@ function CustomerMenu() {
     <div className="bg-[var(--background)] text-[var(--text)] min-h-screen font-sans flex flex-col">
       <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center border-b border-[var(--secondary-text)]/10 sticky top-0 z-10 bg-[var(--background)]">
         <div className="flex items-center space-x-3">
-          {restaurant?.logo && (
-            <img
-              src={restaurant.logo}
-              alt={`${restaurant.name} logo`}
-              className="h-10 w-10 rounded-full object-cover"
-            />
-          )}
+          <img
+            src="/shivantra.png.jpg"
+            alt={`${restaurant?.name || 'Shivantra'} logo`}
+            className="h-10 w-10 rounded-full object-cover"
+          />
           <span className="text-2xl font-bold font-serif">{restaurant?.name || 'Shivantra'}</span>
         </div>
         <div className="flex items-center space-x-6">

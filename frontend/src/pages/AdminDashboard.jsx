@@ -12,6 +12,14 @@ function AdminDashboard() {
           <h1 className="text-xl font-semibold">Admin Dashboard</h1>
           <div className="flex items-center space-x-4">
             <Link
+              to="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:opacity-90 transition-opacity"
+            >
+              View Menu
+            </Link>
+            <Link
               to="/admin/settings"
               className="px-4 py-2 bg-[var(--admin-primary)] text-white rounded-lg hover:opacity-90 transition-opacity"
             >

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import toast from 'react-hot-toast';
 import { getRestaurant, updateRestaurant, createRestaurant } from '../../api/adminApi';
 import RestaurantSettingsForm from './RestaurantSettingsForm';
 import Loader from './Loader';
@@ -7,47 +8,47 @@ import Error from './Error';
 function RestaurantSettings() {
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const [isCreateMode, setIsCreateMode] = useState(false);
 
-  const loadRestaurant = async () => {
+  const loadRestaurant = useCallback(async () => {
     try {
       setLoading(true);
-      setError(null);
+      setError('');
       const data = await getRestaurant();
       setRestaurant(data);
       setIsCreateMode(false);
     } catch (err) {
-      if (err.message.includes('404') || err.message.includes('Not Found')) {
-        // If not found, switch to create mode
+      if (err.response && err.response.status === 404) {
         setIsCreateMode(true);
-        setRestaurant({}); // Start with empty data
       } else {
-        setError(err.message);
+        setError(err.message || 'Failed to load restaurant profile.');
+        toast.error('Failed to load restaurant profile.');
       }
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadRestaurant();
-  }, []);
+  }, [loadRestaurant]);
 
-  const handleSave = async (formData) => {
+  const handleSubmit = async (formData) => {
     try {
-      setError(null);
+      setLoading(true);
       if (isCreateMode) {
         await createRestaurant(formData);
-        alert('Restaurant profile created successfully!');
+        toast.success('Restaurant profile created successfully!');
       } else {
         await updateRestaurant(restaurant._id, formData);
-        alert('Settings saved successfully!');
+        toast.success('Settings updated successfully!');
       }
-      loadRestaurant(); // Refresh data and switch to edit mode
+      await loadRestaurant(); // Refresh data
     } catch (err) {
-      setError(err.message);
-      alert('Failed to save settings.');
+      toast.error(err.message || 'Failed to save settings.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,7 +62,7 @@ function RestaurantSettings() {
       </h2>
       <RestaurantSettingsForm
         initialData={restaurant}
-        onSave={handleSave}
+        onSave={handleSubmit}
         isCreateMode={isCreateMode}
       />
     </div>

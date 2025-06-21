@@ -18,7 +18,10 @@ exports.createRestaurant = async (req, res) => {
   try {
     const restaurantData = { ...req.body };
     if (req.file) {
-      restaurantData.logo = req.file.path;
+      // Apply a transformation to the logo URL from Cloudinary
+      // This creates a 200x200px square PNG, perfect for logos.
+      const transformedLogoUrl = req.file.path.replace('/upload/', '/upload/w_200,h_200,c_fill,f_png/');
+      restaurantData.logo = transformedLogoUrl;
     }
     const restaurant = new Restaurant(restaurantData);
     await restaurant.save();
@@ -34,7 +37,9 @@ exports.updateRestaurant = async (req, res) => {
     const { id } = req.params;
     const updateData = { ...req.body };
     if (req.file) {
-      updateData.logo = req.file.path;
+      // Apply the same transformation on update
+      const transformedLogoUrl = req.file.path.replace('/upload/', '/upload/w_200,h_200,c_fill,f_png/');
+      updateData.logo = transformedLogoUrl;
     }
 
     const restaurant = await Restaurant.findByIdAndUpdate(
