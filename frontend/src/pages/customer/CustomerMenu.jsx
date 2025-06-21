@@ -3,6 +3,7 @@ import { getMenu, getRestaurant } from '../../api/customerApi';
 import CategorySection from '../../components/customer/CategorySection';
 import Loader from '../../components/admin/Loader';
 import Error from '../../components/admin/Error';
+import ThemeToggleButton from '../../components/ThemeToggleButton';
 
 function CustomerMenu() {
   const [menu, setMenu] = useState([]);
@@ -16,7 +17,7 @@ function CustomerMenu() {
         setLoading(true);
         const [menuData, restaurantData] = await Promise.all([
           getMenu(),
-          getRestaurant()
+          getRestaurant(),
         ]);
         setMenu(menuData);
         setRestaurant(restaurantData);
@@ -30,69 +31,76 @@ function CustomerMenu() {
     fetchData();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <Error message={`Failed to load menu. ${error}`} />
-      </div>
-    );
-  }
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader /></div>;
+  if (error) return <div className="min-h-screen flex items-center justify-center p-4"><Error message={`Failed to load menu. ${error}`} /></div>;
 
   return (
-    <div className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
-      <header className="bg-white dark:bg-gray-800 shadow-lg">
-        <div className="container mx-auto px-4 py-8 text-center">
+    <div className="bg-[var(--background)] text-[var(--text)] min-h-screen font-sans flex flex-col">
+      <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center border-b border-[var(--secondary-text)]/10 sticky top-0 z-10 bg-[var(--background)]">
+        <div className="flex items-center space-x-3">
           {restaurant?.logo && (
-            <img 
-              src={restaurant.logo} 
+            <img
+              src={restaurant.logo}
               alt={`${restaurant.name} logo`}
-              className="h-24 w-24 rounded-full mx-auto mb-4 object-cover border-4 border-white dark:border-gray-700 shadow-md"
+              className="h-10 w-10 rounded-full object-cover"
             />
           )}
-          <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
-            {restaurant?.name || 'Our Menu'}
-          </h1>
-          {restaurant?.description && (
-            <p className="mt-4 max-w-2xl mx-auto text-lg text-gray-500 dark:text-gray-400">
-              {restaurant.description}
-            </p>
-          )}
+          <span className="text-2xl font-bold font-serif">{restaurant?.name || 'Shivantra'}</span>
+        </div>
+        <div className="flex items-center space-x-6">
+          <nav className="hidden md:flex items-center space-x-8 text-lg">
+            <a href="#menu" className="hover:text-[var(--primary)] transition-colors">Menu</a>
+            <a href="#contact" className="hover:text-[var(--primary)] transition-colors">Contact</a>
+          </nav>
+          <ThemeToggleButton />
         </div>
       </header>
+      
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-grow">
+        <section id="menu" className="text-center mb-16 pt-16 -mt-16">
+          <h1 className="text-6xl font-bold font-serif">
+            Our Menu
+          </h1>
+          <p className="max-w-3xl mx-auto mt-4 text-lg text-[var(--secondary-text)] leading-relaxed">
+            {restaurant?.description || "Authentic Indian cuisine with a modern twist. Experience the rich flavors and aromas of traditional Indian cooking."}
+          </p>
+        </section>
 
-      <main className="container mx-auto px-4 py-8 sm:py-12">
-        {menu.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-xl text-gray-500">No menu items available right now.</p>
+        {menu.length === 0 && !loading ? (
+          <div className="text-center py-20">
+            <p className="text-2xl text-[var(--secondary-text)]">The kitchen is taking a break!</p>
+            <p className="text-md mt-2">No menu items available right now.</p>
           </div>
         ) : (
-          <div className="space-y-12">
+          <div className="space-y-16">
             {menu.map((category) => (
               <CategorySection key={category._id} category={category} />
             ))}
           </div>
         )}
+
+        <section id="contact" className="text-center my-24 pt-16 -mt-16">
+          <h2 className="text-4xl font-bold font-serif mb-6">Contact Us</h2>
+          <div className="max-w-3xl mx-auto mt-4 text-lg text-[var(--secondary-text)] space-y-4">
+            {restaurant?.address && (
+              <p className="flex justify-center items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                <span>{restaurant.address}</span>
+              </p>
+            )}
+            {restaurant?.phone && (
+              <p className="flex justify-center items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                <span>{restaurant.phone}</span>
+              </p>
+            )}
+          </div>
+        </section>
       </main>
 
-      <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-12">
-        <div className="container mx-auto px-4 py-8 text-center text-gray-600 dark:text-gray-400">
-          {restaurant?.address && (
-            <p className="mb-2">📍 {restaurant.address}</p>
-          )}
-          {restaurant?.phone && (
-            <p className="mb-2">📞 {restaurant.phone}</p>
-          )}
-          <p className="text-sm mt-4">
-            &copy; {new Date().getFullYear()} {restaurant?.name || 'Our Restaurant'}. All Rights Reserved.
-          </p>
+      <footer className="border-t border-[var(--secondary-text)]/10 mt-auto">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-[var(--secondary-text)]">
+          <p>&copy; {new Date().getFullYear()} {restaurant?.name || 'Shivantra Caterers'}. All Rights Reserved.</p>
         </div>
       </footer>
     </div>

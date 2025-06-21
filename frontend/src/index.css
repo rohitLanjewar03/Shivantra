@@ -1,8 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@400;700&display=swap');
+
 @import "tailwindcss";
 
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
 
+  :root {
+    /* Customer-facing theme */
+    --background: #FFFFFF;
+    --text: #0D1117;
+    --primary: #6D28D9; /* A stronger purple for light mode */
+    --secondary-text: #4B5563; /* A darker gray for descriptions */
 
-body {
-  @apply bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200;
-  font-family: 'Inter', sans-serif;
+    /* Admin theme */
+    --admin-bg: #f3f4f6;
+    --admin-header-bg: #ffffff;
+    --admin-card-bg: #ffffff;
+    --admin-text: #111827;
+    --admin-text-secondary: #6b7280;
+    --admin-primary: #4f46e5;
+    --admin-edit: #f59e0b;
+    --admin-delete: #ef4444;
+  }
+
+  .dark {
+    /* Customer-facing theme */
+    --background: #0D1117;
+    --text: #E6EDF3;
+    --primary: #8B5CF6;
+    --secondary-text: #8D96A0;
+
+    /* Admin theme */
+    --admin-bg: #1c2128;
+    --admin-header-bg: #2d333b;
+    --admin-card-bg: #2d333b;
+    --admin-text: #e6edf3;
+    --admin-text-secondary: #8d96a0;
+  }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', serif;
+  }
 }

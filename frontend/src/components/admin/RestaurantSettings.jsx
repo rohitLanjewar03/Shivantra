@@ -55,8 +55,8 @@ function RestaurantSettings() {
   if (error && !isCreateMode) return <Error message={error} />;
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
+    <div className="bg-[var(--admin-card-bg)] rounded-lg shadow-lg p-6">
+      <h2 className="text-2xl font-bold font-serif mb-6">
         {isCreateMode ? 'Create Restaurant Profile' : 'Edit Restaurant Profile'}
       </h2>
       <RestaurantSettingsForm

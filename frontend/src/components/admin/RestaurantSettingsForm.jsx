@@ -8,7 +8,7 @@ function RestaurantSettingsForm({ initialData, onSave, isCreateMode }) {
 
   useEffect(() => {
     setFormData({ ...initialData });
-    setLogoPreview(initialData?.logo ? `http://localhost:5000${initialData.logo}` : null);
+    setLogoPreview(initialData?.logo);
   }, [initialData]);
 
   const handleChange = (e) => {
@@ -37,7 +37,7 @@ function RestaurantSettingsForm({ initialData, onSave, isCreateMode }) {
 
     if (logoFile) {
       submissionData.append('logo', logoFile);
-    } else if (initialData.logo) {
+    } else if (initialData?.logo) {
       submissionData.append('logo', initialData.logo)
     }
 
@@ -45,8 +45,8 @@ function RestaurantSettingsForm({ initialData, onSave, isCreateMode }) {
     setIsSubmitting(false);
   };
 
-  const inputClass = "mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500";
-  const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-300";
+  const inputClass = "mt-1 block w-full px-3 py-2 bg-[var(--admin-bg)] border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--admin-primary)] focus:border-[var(--admin-primary)]";
+  const labelClass = "block text-sm font-medium text-[var(--admin-text-secondary)]";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -65,9 +65,9 @@ function RestaurantSettingsForm({ initialData, onSave, isCreateMode }) {
       <div>
         <label className={labelClass}>Logo</label>
         <div className="mt-2 flex items-center gap-4">
-          {logoPreview && <img src={logoPreview} alt="Logo Preview" className="w-20 h-20 rounded-full object-cover" />}
+          {logoPreview && <img src={logoPreview} alt="Logo Preview" className="w-20 h-20 rounded-md object-cover" />}
           <input id="logo-upload" type="file" name="logo" onChange={handleFileChange} className="hidden" accept="image/*" />
-          <label htmlFor="logo-upload" className="cursor-pointer px-4 py-2 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600">
+          <label htmlFor="logo-upload" className="cursor-pointer px-4 py-2 bg-gray-500 text-white rounded-md hover:opacity-90">
             Change Logo
           </label>
         </div>
@@ -80,7 +80,7 @@ function RestaurantSettingsForm({ initialData, onSave, isCreateMode }) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-opacity-50"
+          className="px-6 py-2 bg-[var(--admin-primary)] text-white rounded-lg hover:opacity-90 disabled:opacity-50 transition-opacity"
         >
           {isSubmitting ? 'Saving...' : (isCreateMode ? 'Create Profile' : 'Save Settings')}
         </button>
