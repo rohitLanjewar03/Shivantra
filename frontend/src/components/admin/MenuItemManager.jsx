@@ -79,9 +79,11 @@ function MenuItemManager() {
     setEditingItem(null);
   };
   
-  const getCategoryName = (categoryId) => {
-    const category = categories.find(cat => cat._id === categoryId);
-    return category ? category.name : 'Uncategorized';
+  const getCategoryName = (category) => {
+    if (!category) return 'Uncategorized';
+    if (typeof category === 'object' && category.name) return category.name;
+    const found = categories.find(cat => cat._id === category);
+    return found ? found.name : 'Uncategorized';
   };
 
   if (loading) return <Loader />;
